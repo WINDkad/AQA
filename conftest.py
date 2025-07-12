@@ -1,8 +1,6 @@
 import pytest
 import requests
 from faker import Faker
-from requests import session
-
 from constants import HEADERS, BASE_URL
 
 faker = Faker()
@@ -19,14 +17,14 @@ def auth_session():
     )
     assert response.status_code == 200, "Ошибка авторизации"
     token = response.json().get("token")
-    assert token is not None, "В ответе не оказалось токена"
+    assert token is not None,  "В ответе не оказалось токена"
 
     session.headers.update({"Cookie": f"token={token}"})
     return session
 
 @pytest.fixture()
 def booking_data():
-    return{
+    return {
         "firstname": faker.first_name(),
         "lastname": faker.last_name(),
         "totalprice": faker.random_int(min=100, max=100000),
@@ -37,17 +35,3 @@ def booking_data():
         },
         "additionalneeds": "Cigars"
     }
-
-@pytest.fixture()
-def invalid_booking_data():
-    return {
-        "lastname": faker.last_name(),
-        "totalprice": faker.random_int(min=100, max=100000),
-        "depositpaid": True,
-        "bookingdates": {
-            "checkin": "2024-04:05",
-            "checkout": "2024-04:08"
-        },
-        "additionalneeds": "Cigars"
-    }
-
